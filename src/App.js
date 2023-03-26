@@ -5,8 +5,8 @@ import Start from './components/Start';
 import Question from './components/Question';
 import End from './components/End';
 import Modal from './components/Modal';
-import quizData from './data/quiz.json';
-
+// import quizData from './data/quiz.json';
+import axios from 'axios'
 let interval;
 
 const App = () => {
@@ -15,8 +15,17 @@ const App = () => {
   const [answers, setAnswers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [time, setTime] = useState(0);
+  const [quizData,setQuizData]=useState([]);
 
   useEffect(() => {
+    axios.get('http://localhost:8080/',{
+    
+    params: {
+      id: 12345
+    }
+  }).then(d=>{
+   setQuizData(d);
+  })
     if(step === 3) {
       clearInterval(interval);
     }
@@ -42,6 +51,7 @@ const App = () => {
   return (
     <div className="App">
       {step === 1 && <Start onQuizStart={quizStartHandler} />}
+      {quizData===[]}
       {step === 2 && <Question 
         data={quizData.data[activeQuestion]}
         onAnswerUpdate={setAnswers}
